@@ -1,10 +1,15 @@
 import _thread
 import time
+import logging
+from logging.handlers import RotatingFileHandler
+from logging import handlers
+import sys
+
 
 class Printer:
 
-    model = "printer-model"
-    serial = "123456"
+    model = "biqu-printer"
+    serial = "simulator-123456"
     status = "free"
     progress = 0
     temperature = 25
@@ -25,11 +30,11 @@ class Printer:
         time.sleep(2)
         self.temperature = 200
         # Start printing
-        self.status = "busy"
+        self.status = "printing"
 
     def threaded_print(self):
 
-        self.status = "busy"
+        self.status = "printing"
         self.progess = 0
         time.sleep(10)
         self.progess = 30
@@ -40,22 +45,24 @@ class Printer:
         self.status = "done"
 
     def threaded_pause(self):
-        self.status = "busy"
+        self.status = "printing"
 
     def threaded_resume(self):
-        self.status = "busy"
+        self.status = "printing"
 
     def threaded_cancel(self):
         self.progess = 0
         self.status = "done"
 
     def prepare(self):
+        logger.debug("start prepare")
         try:
             _thread.start_new_thread( self.threaded_prepare, () )
         except Exception as error:
             print ("Error: unable to start thread" + error)
 
     def print(self):
+        logger.debug("start printing")
         try:
             _thread.start_new_thread( self.threaded_print, () )
         except Exception as error:
