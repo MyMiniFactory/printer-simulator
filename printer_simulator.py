@@ -5,11 +5,15 @@ import logging
 from logging.handlers import RotatingFileHandler
 from logging import handlers
 import sys
+import os
 import select
 import json
 import datetime
 
 from classes.printer import Printer
+
+from dotenv import load_dotenv
+load_dotenv() # Load params from the .env file
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -20,27 +24,19 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+host = os.getenv("HOST")
+port = int(os.getenv("PORT"))
+client_id = os.getenv("CLIENT_ID")
+api_key = os.getenv("API_KEY")
+status_topic = os.getenv("STATUS_TOPIC")
+model = os.getenv("MODEL")
+serial = os.getenv("SERIAL")
+status = os.getenv("STATUS")
+temperature = os.getenv("TEMPERATURE")
+progress = os.getenv("PROGRESS")
+token = os.getenv("TOKEN")
 
 keep_looping = True
-
-# host = "localhost"
-# port = 1883
-host = "mqtt.myminifactory.com"
-port = 8883
-
-client_id = "octoprint_myminifactory"
-api_key = "b4943605-52b5-4d13-94ee-34eb983a813f"
-# client_id = "printer-manufacturer"
-# api_key = "1234"
-
-status_topic = "/printers"
-
-model = "biqu-printer"
-serial = "simulator-123456"
-status = "free"
-temperature = 25
-progress = 0
-token = "abcd"
 
 printer = Printer(model, serial, status, progress, temperature)
 
